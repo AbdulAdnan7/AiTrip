@@ -1,4 +1,7 @@
 import React from 'react'
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import PaperPlane from '../components/PaperPlane';
 
 const Home = () => {
   return (
@@ -6,6 +9,15 @@ const Home = () => {
       <section className="relative min-h-screen overflow-hidden bg-slate-100 px-4 py-20">
         {/* Grid Background Lines */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+
+        <div className=' z-100 inset-0'>
+  <Canvas camera={{ position: [0,0,5], fov: 60}} >
+       <ambientLight intensity={0.5} />
+       <directionalLight position={[3,3,3]} />
+       <PaperPlane position={[0,0,0]} />
+       <OrbitControls />
+  </Canvas>
+  </div>
 
         {/* Content */}
         <div className="relative z-10 text-left space-y-4 max-w-2xl">
@@ -21,6 +33,7 @@ const Home = () => {
   </button>
 </div>
 
+  
 
 
         </div>
