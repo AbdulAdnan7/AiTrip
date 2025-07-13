@@ -40,6 +40,12 @@ const Home = () => {
         </div>
       </section>
 
+      <section>
+        <div>
+          <h1></h1>
+        </div>
+      </section>
+
     </>
   );
 };
