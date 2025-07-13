@@ -3,13 +3,31 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import PaperPlane from '../components/PaperPlane';
 import { NavLink } from 'react-router';
-import { Sparkles, MapPin, Plane, icons, SlidersHorizontal } from 'lucide-react';
+import { Sparkles, MapPin, Plane, icons, SlidersHorizontal, Wallet, CheckCircle, Map } from 'lucide-react';
 
 
 
 
 
 const Home = () => {
+
+  const features = [
+    {
+      icon: <Sparkles className='w-8 h-8 text-purple-600' />,
+      title: 'AI-Powered Personalization',
+      description: 'Every trip istailored using smart AI that adapts to your interests, travel style, and budget',
+    },
+    {
+      icon: <Map className='w-8 h-8 text-purple-600' />,
+      title: 'Detailed Daily Plans',
+      description: 'Every day is broken down into morning, afternoon, and evening  - no more guesswork',
+    },
+    {
+      icon: <CheckCircle className='w-8 h-8 text-purple-600 shadow-md' />,
+      title: 'Budget-Friendly Suggestions',
+      description: 'Stay on budget with local recommandations for food, hotels, and experiences'
+    }
+  ]
 
   const steps = [
     {
@@ -68,33 +86,46 @@ const Home = () => {
         </div>
       </section>
 
-{/** For How it Works Section */}
-      <section className='bg-white shadow-md h-[400px]'>
-        <div className='flex justify-center mt-4'>
-          <h1 className='text-2xl font-semibold'>How it Works</h1>
-        </div>
-        <div className='grid md:grid-cols-2 lg:grids-cols-4 gap-6 max-w-6xl mx-auto'>
-          {
-            steps.map((step, index) => (
-              <div key={index} className='bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-all space-y-3 text-center'>
-                <div className='flex justify-center'>
-                  {step.icon}
-                </div>
-                  <h3 className='text-lg font-semibold'>{step.title}</h3>
-                  <p className='text-sm text-gray-600'>{step.description}</p>
-                </div>
-            ))
+{/** How It Works Section */}
+<section className="bg-gray-50 py-16">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-800">🚀 How It Works</h2>
+    <p className="text-gray-600 mt-2">Your trip planning journey, step by step</p>
+  </div>
+  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto px-6">
+    {steps.map((step, index) => (
+      <div
+        key={index}
+        className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all space-y-3 text-center"
+      >
+        <div className="flex justify-center">{step.icon}</div>
+        <h3 className="text-lg font-semibold">{step.title}</h3>
+        <p className="text-sm text-gray-600">{step.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
 
-          }
-        </div>
+{/** Why Choose Us Section */}
+<section className="bg-white py-16">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-800">✨ Why Choose Us?</h2>
+    <p className="text-gray-600 mt-2">Here’s what makes us different</p>
+  </div>
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
+    {features.map((feature, index) => (
+      <div
+        key={index}
+        className="bg-gray-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all space-y-3 text-center"
+      >
+        <div className="flex justify-center">{feature.icon}</div>
+        <h3 className="text-lg font-semibold">{feature.title}</h3>
+        <p className="text-sm text-gray-600">{feature.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
 
-       
-      </section>
-
-      {/** For Testimonals */}
-        <section className='bg-white shadow-md h-[400px]'>
-
-        </section>
     </>
   );
 };
