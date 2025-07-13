@@ -1,53 +1,87 @@
-//importing required packages
-import express from 'express'
+import express from 'express';
 import dotenv from 'dotenv';
-import { OpenAI } from 'openai/client.js';
+import OpenAI from 'openai';
 
-//Load environmnet variables from .env file
 dotenv.config();
-
-//creating a new express router instance
 const router = express.Router();
 
-//Initialize OpenAi client conifgured to use OpenRouter API
+// ✅ Set up OpenRouter AI client
 const openai = new OpenAI({
-    baseURL: 'https://openrouter.ai/api/v1', //OpenRouter Api base url
-    apiKey: process.env.OPENROUTER_API_KEY, //OpenRouter api key from env
-    defaultHeaders: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`, //Auth header required by Openai
-    },
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY,
+  defaultHeaders: {
+    'HTTP-Referer': 'http://localhost:3000', // Change to your frontend URL
+    'X-Title': 'AI Trip Planner', // Your app name
+  },
 });
 
+router.post('/', async (req, res) => {
+  const { destination, days, interests, budget, travelers } = req.body;
 
-router.post('/', async (res, req) => {
-    //Extract destination, days, and intersets from incoming request body
-    const {destination, days, interests} = req.body;
+  // ✅ Validate request body
+  if (
+    !destination ||
+    !days ||
+    isNaN(Number(days)) ||
+    !budget ||
+    isNaN(Number(budget)) ||
+    !travelers ||
+    isNaN(Number(travelers)) ||
+    !interests ||
+    !Array.isArray(interests)
+  ) {
+    return res.status(400).json({
+      error: 'Please provide all required trip details in the correct format.',
+    });
+  }
 
-    //Construct a prompt string to instruct the AI what to generate
-    const prompt = `Plain a ${days}-day trip to ${destination} focused on ${interests.join(', ')}`
+  // ✅ Strict prompt to enforce budget, group tags, and cost breakdowns
+  const prompt = `
+Plan a detailed ${days}-day travel itinerary for ${travelers} traveler(s) to ${destination} in India.
 
-    try  {
+💵 Total budget: $${budget} USD for the full group (${travelers} people)
 
-    
-    //send the prompt to OpenRouter's chat completion endpoint
+🎯 Interests: ${interests.join(', ')}
+
+📌 Instructions:
+- Break each day into Morning / Afternoon / Evening.
+- Suggest 2–3 activities per time slot.
+- For EACH activity, include:
+  - Short description
+  - ✅ if it is group-friendly
+  - 💰 Estimated cost PER PERSON in USD
+- Recommend **budget hotels** (under $40/night)
+- Use **local food spots** (under $10/person)
+- Use **public/shared transport**
+- After each day, include:
+  - 💰 Daily Subtotal
+  - 💰 Running Total
+- DO NOT exceed the total budget.
+- DO NOT suggest luxury hotels or expensive restaurants.
+
+🧾 Format clearly using bullet points, headers, and cost breakdowns.
+`;
+
+  try {
     const response = await openai.chat.completions.create({
-        model: 'mistralai/mistral-7b-instruct', //OpenRouter model Id
-        messages: [{role: 'user' , content: prompt}], //The conversion messages array
-        temperature: 0.7, //Controls creativity of the response (0-1)
+      model: 'anthropic/claude-3-opus', // ✅ Use gpt-4o if available
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
     });
 
-    //Extract generated itinerary text from response
-    const itinerary = response.choices[0].message.content
+    const itinerary = response.choices?.[0]?.message?.content;
 
-    //Send itinerary back to client as JSON
-    res.json({itinerary});
+    if (!itinerary) {
+      return res.status(500).json({ error: 'No itinerary was returned by the AI.' });
+    }
 
-     } catch (err) {
-        console.error('OpenRouter API error: ', err);
-        res.status(500).json({ error: err.message || 'Failed to generate itinerary'})
-     }
-
+    res.json({ itinerary });
+  } catch (err) {
+    console.error('Error generating itinerary:', err);
+    res.status(500).json({
+      error: 'Failed to generate itinerary. Please try again later.',
+    });
+  }
 });
-
 
 export default router;

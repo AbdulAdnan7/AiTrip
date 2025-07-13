@@ -5,6 +5,8 @@ import './App.css'
 import Home from './pages/Home'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import Navbar from './components/Navbar'
+import Planner from './pages/Planner'
+import TripResult from './components/TripResult'
 
 function App() {
 
@@ -15,6 +17,20 @@ function App() {
       <Navbar />
       <Home />
     </div>
+    },
+    {
+      path: '/planner',
+      element: <div>
+        <Navbar />
+        <Planner />
+      </div>
+    },
+     {
+      path: '/tripresult',
+      element: <div>
+        <Navbar />
+        <TripResult />
+      </div>
     }
    ])
 
