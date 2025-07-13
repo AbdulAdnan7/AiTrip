@@ -30,12 +30,7 @@ const Navbar = () => {
         >
           Plan Trip
         </NavLink>
-        <NavLink to='/login' >
-        <button className='bg-purple-500 px-3 text-white py-1'>Login</button>
-        </NavLink>
-        <NavLink to='/signin' >
-            <button className='border px-3 py-1 border-purple-500 text-purple-500 font-semibold'>Sign-up</button>
-        </NavLink>
+       
       </div>
     </nav>
   );
